@@ -1,11 +1,15 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { css } from '@emotion/core';
+import Router from 'next/router';
 import Layout from '../components/layout/Layout';
 import { Form, InputContainer, InputSubmit, Error } from '../components/ui/Form';
 import useValidation from '../hooks/useValidation';
 import validateNewAccount from '../validation/validateNewAccount';
+import firebase from '../firebase';
 
 const NewAccount = () => {
+
+  const [ error, setError ] = useState(false);
 
   const initialState = {
     name: '',
@@ -17,8 +21,14 @@ const NewAccount = () => {
 
   const { name, email, password } = values;
 
-  function createAccount() {
-    console.log('Creando cuenta');
+  async function createAccount() {
+    try {
+      await firebase.createAccount(name, email, password);
+      Router.push('/');
+    } catch (error) {
+      console.log('Hubo un error al crear el usuario', error.message);
+      setError(error.message);
+    }
   }
 
   return (
@@ -84,6 +94,8 @@ const NewAccount = () => {
                 />
             </InputContainer>
             { errors.password && <Error>{errors.password}</Error>}
+
+            {error && <Error>{error}</Error>}
             <InputSubmit
               type="submit"
               value="Crear cuenta"
