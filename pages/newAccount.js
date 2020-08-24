@@ -9,14 +9,14 @@ import firebase from '../firebase';
 
 const NewAccount = () => {
 
-  const [ error, setError ] = useState(false);
-
+  
   const initialState = {
     name: '',
     email: '',
     password: ''
   }
   
+  const [ error, setError ] = useState(false);
   const {values, errors, submitForm, handleSubmit, handleChange, handleBlur} = useValidation(initialState, validateNewAccount, createAccount);
 
   const { name, email, password } = values;
