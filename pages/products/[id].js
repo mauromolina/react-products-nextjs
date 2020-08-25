@@ -108,6 +108,28 @@ const Product = () => {
 
     }
 
+    const canDelete = () => {
+        if(!user) return false;
+        if(creator.id === user.uid){
+            return true;
+        }
+    }
+
+    const deleteProduct = async() => {
+        if(!user){
+            return router.push('/login');
+        }
+        if(creator.id !== user.uid){
+            return router.push('/')
+        }
+        try {
+            await firebase.db.collection('products').doc(id).delete();
+            router.push('/');
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     if(Object.keys(product).length === 0 && !error) return 'Cargando...';
 
     return (
@@ -174,7 +196,7 @@ const Product = () => {
                                             { isCreator(comment.userId) && <ProductCreator>Creador</ProductCreator>}
                                         </li>
                                     ))}
-                                </ul>
+                                    </ul>
                                 )}
                         </div>
                         <aside>
@@ -203,6 +225,7 @@ const Product = () => {
                             </div>
                         </aside>
                     </ProductContent>
+                    { canDelete() && <Button onClick={deleteProduct}>Eliminar Producto</Button>}
                 </div>
             }
             </>
