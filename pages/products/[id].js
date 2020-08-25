@@ -34,6 +34,7 @@ const Product = () => {
     const [error, setError] = useState(false);
     const [loading, setLoading] = useState(false);
     const [comment, setComment] = useState({});
+    const [queryDB, setQueryDB] = useState(true);
 
     const router = useRouter();
     const { query: {id}} = router;
@@ -41,20 +42,21 @@ const Product = () => {
     const {firebase, user} = useContext(FirebaseContext);
 
     useEffect( () => {
-        if(id){
+        if(id && queryDB){
             const getProduct = async () => {
                 const queryProduct = await firebase.db.collection('products').doc(id);
                 const product = await queryProduct.get();
                 if(product.exists){
-                    console.log('existe');
                     setProduct(product.data());
+                    setQueryDB(false);
                 } else {
                     setError(true);
+                    setQueryDB(false);
                 }
             }
             getProduct();
         }
-    }, [id, product]);
+    }, [id]);
 
     const { comments, creationDate, desc, url, enterprise, name, urlImage, votes, creator, hasVoted} = product;
 
@@ -75,6 +77,7 @@ const Product = () => {
             ...product,
             votes: totalVotes
         })
+        setQueryDB(true);
     }
 
     const handleComment = e => {
@@ -101,6 +104,7 @@ const Product = () => {
             ...product,
             comments: newComments
         })
+        setQueryDB(true);
 
     }
 
