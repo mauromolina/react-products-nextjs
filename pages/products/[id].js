@@ -43,9 +43,28 @@ const Product = () => {
             }
             getProduct();
         }
-    }, [id]);
+    }, [id, product]);
 
-    const { comments, creationDate, desc, url, enterprise, name, urlImage, votes, creator} = product;
+    const { comments, creationDate, desc, url, enterprise, name, urlImage, votes, creator, hasVoted} = product;
+
+    const voteProduct = () => {
+        if(!user){
+            return router.push('/login');
+        }
+
+        if(hasVoted.includes(user.uid)) return;
+
+        const newHasVoted = [...hasVoted, user.uid];
+
+        const totalVotes = votes + 1;
+
+        firebase.db.collection('products').doc(id).update( { votes: totalVotes, hasVoted: newHasVoted });
+
+        setProduct({
+            ...product,
+            votes: totalVotes
+        })
+    }
 
     if(Object.keys(product).length === 0 && !error) return 'Cargando...';
 
@@ -115,7 +134,9 @@ const Product = () => {
                                         text-align:center;
                                     `}>{votes} Votos</p>
                                 { user && (
-                                    <Button>
+                                    <Button
+                                        onClick={voteProduct}
+                                    >
                                         Votar
                                     </Button>
                                 )}
