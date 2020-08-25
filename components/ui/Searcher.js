@@ -1,6 +1,7 @@
-import React from 'react';
+import React, {useState} from 'react';
 import styled from '@emotion/styled';
 import { css } from '@emotion/core';
+import Router from 'next/router';
 
 const InputText = styled.input`
     border: 1px solid var(--gray3);
@@ -28,14 +29,31 @@ const ButtonSubmit = styled.button`
 `;
 
 const Searcher = () => {
+
+    const [search, setSearch] = useState('');
+
+    const handleSubmit = e => {
+        e.preventDefault();
+
+        if(search.trim() === '') return;
+        console.log(search);
+        Router.push({
+            pathname:'/search',
+            query: { q : search}
+        })
+    }
+
     return ( 
         <form
             css={css`
                 position: relative;
-            `}>
+            `}
+            onSubmit={handleSubmit}
+            >
             <InputText
                 type="text"
                 placeholder="Buscar"
+                onChange={ e => setSearch(e.target.value)}
             />
             <ButtonSubmit
                 type="submit"
