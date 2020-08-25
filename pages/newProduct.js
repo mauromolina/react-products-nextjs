@@ -7,6 +7,8 @@ import { Form, InputContainer, InputSubmit, Error } from '../components/ui/Form'
 import useValidation from '../hooks/useValidation';
 import validateNewProduct from '../validation/validateNewProduct';
 import {FirebaseContext} from '../firebase';
+import Error404 from '../components/layout/404';
+
 
 const NewProduct = () => {
 
@@ -46,7 +48,11 @@ const NewProduct = () => {
       desc,
       votes: 0,
       comments: [],
-      creationDate: Date.now()
+      creationDate: Date.now(),
+      creator: {
+        id: user.uid,
+        name: user.displayName
+      }
     }
 
     firebase.db.collection('products').add(product);
@@ -82,6 +88,10 @@ const NewProduct = () => {
   return (
     <div>
       <Layout>
+        { !user ? 
+          <Error404
+            msg="Es necesario que inicies sesión para poder acceder a esta página!"/>
+        : 
         <>
           <h1
             css={css`
@@ -194,6 +204,7 @@ const NewProduct = () => {
             />
           </Form>
         </>
+        }
       </Layout>
     </div>
   )
