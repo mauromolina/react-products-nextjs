@@ -11,6 +11,8 @@ const Login = () => {
 
   const [ error, setError ] = useState(false);
 
+  const [loading, setLoading] = useState(false);
+
   const initialState = {
     email: '',
     password: ''
@@ -22,7 +24,9 @@ const Login = () => {
 
   async function logIn() {
     try {
+      setLoading(true);
       const user = await firebase.logIn(email, password);
+      setLoading(false);
       Router.push('/');
     } catch (error) {
       console.log('Hubo un error al autenticar el usuario', error.message);
@@ -33,6 +37,9 @@ const Login = () => {
 
   return (
     <div>
+      { loading ? 
+        <p>Iniciando sesión</p>
+      :
       <Layout>
         <>
           <h1
@@ -87,6 +94,7 @@ const Login = () => {
           </Form>
         </>
       </Layout>
+      }
     </div>
   )
   }
