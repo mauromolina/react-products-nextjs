@@ -18,11 +18,22 @@ const ProductContent = styled.div`
     }
 `;
 
+const ProductCreator = styled.p`
+    padding: .5rem 2rem;
+    background-color: #DA552F;
+    color: #ffffff;
+    text-transform: uppercase;
+    font-weight: bold;
+    display: inline-block;
+    text-align: center;
+`;
+
 const Product = () => {
 
     const [product, setProduct] = useState({});
     const [error, setError] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [comment, setComment] = useState({});
 
     const router = useRouter();
     const { query: {id}} = router;
@@ -66,6 +77,33 @@ const Product = () => {
         })
     }
 
+    const handleComment = e => {
+        setComment({
+            ...comment,
+            [e.target.name] : e.target.value
+        })
+    }
+
+    const isCreator = id => {
+        if(creator.id === id) {
+            return true;
+        }
+    }
+
+    const addComment = e => {
+        e.preventDefault();
+        if(!user) return router.push('/login');
+        comment.userId = user.uid;
+        comment.userName = user.displayName;
+        const newComments = [...comments, comment];
+        firebase.db.collection('products').doc(id).update( { comments: newComments });
+        setProduct({
+            ...product,
+            comments: newComments
+        })
+
+    }
+
     if(Object.keys(product).length === 0 && !error) return 'Cargando...';
 
     return (
@@ -92,11 +130,14 @@ const Product = () => {
                             { user && (
                                 <>
                                     <h2>Agrega un comentario</h2>
-                                        <form>
+                                        <form
+                                            onSubmit={addComment}
+                                        >
                                             <InputContainer>
                                                 <input
                                                     type="text"
                                                     name="msg"
+                                                    onChange={handleComment}
                                                 />    
                                             </InputContainer>
                                             <InputSubmit
@@ -110,12 +151,27 @@ const Product = () => {
                                 css={css`
                                     margin: 2rem 0;
                                 `}>Comentarios: {comments.length}</h2>
-                            { comments.map( comment => (
-                                <li>
-                                    <p>{comment.name}</p>
-                                    <p>Escrito por: {comment.userName}</p>
-                                </li>
-                            ))}
+                                { comments.length === 0 ? 'No hay comentarios' : (
+                                    <ul>
+                                    { comments.map( (comment, i) => (
+                                        <li
+                                            key={`${comment.userId}-${i}`}
+                                            css={ css`
+                                                border: 1px solid #e1e1e1;
+                                                padding: 2rem;
+                                                border-bottom: 3px solid #bbb;
+                                            `}>
+                                            <p>{comment.msg}</p>
+                                            <p>Escrito por:
+                                                <span css={css` font-weight: bold`}>
+                                                    {' '}{comment.userName}
+                                                </span>
+                                            </p>
+                                            { isCreator(comment.userId) && <ProductCreator>Creador</ProductCreator>}
+                                        </li>
+                                    ))}
+                                </ul>
+                                )}
                         </div>
                         <aside>
                             <Button
