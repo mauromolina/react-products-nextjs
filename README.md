@@ -1,5 +1,13 @@
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
+### Information
+
+This SSR application was created with ReactJS as part of my learning with React Hooks, Next.js, Firebase and reinforcing design knowledge with Styled Components. It is a simple page that includes Authentication, Storage, Database and Hosting in Firebase for a clone of the Product Hunt site.
+
+### Preview
+
+The app is now live on: [Firebase Hosting](https://mmhunt-react.web.app/)
+
 ## Getting Started
 
 First, run the development server:
