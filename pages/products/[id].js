@@ -9,6 +9,7 @@ import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 import { es } from 'date-fns/locale';
 import { InputSubmit, InputContainer } from '../../components/ui/Form';
 import { Button } from '../../components/ui/Button';
+import Loading from '../../components/ui/Loading';
 
 const ProductContent = styled.div`
     @media(min-width: 768px){
@@ -46,13 +47,16 @@ const Product = () => {
             const getProduct = async () => {
                 const queryProduct = await firebase.db.collection('products').doc(id);
                 const product = await queryProduct.get();
-                if(product.exists){
-                    setProduct(product.data());
-                    setQueryDB(false);
-                } else {
-                    setError(true);
-                    setQueryDB(false);
-                }
+                setTimeout(() => {
+                    if(product.exists){
+                        setProduct(product.data());
+                        setQueryDB(false);
+                    } else {
+                        setError(true);
+                        setQueryDB(false);
+                    }
+                }, 2000);
+                
             }
             getProduct();
         }
@@ -130,7 +134,7 @@ const Product = () => {
         }
     }
 
-    if(Object.keys(product).length === 0 && !error) return 'Cargando...';
+    if(Object.keys(product).length === 0 && !error) return <Loading msg="Cargando producto..."/>;
 
     return (
         <Layout>

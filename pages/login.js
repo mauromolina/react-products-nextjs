@@ -3,6 +3,7 @@ import { css } from '@emotion/core';
 import Router from 'next/router';
 import Layout from '../components/layout/Layout';
 import { Form, InputContainer, InputSubmit, Error } from '../components/ui/Form';
+import Loading from '../components/ui/Loading';
 import useValidation from '../hooks/useValidation';
 import validateLogin from '../validation/validateLogin';
 import firebase from '../firebase';
@@ -38,7 +39,7 @@ const Login = () => {
   return (
     <div>
       { loading ? 
-        <p>Iniciando sesión</p>
+        <Loading msg="Iniciando sesión..."/>
       :
       <Layout>
         <>

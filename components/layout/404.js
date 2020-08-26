@@ -12,7 +12,7 @@ const ErrorContent = styled.div`
     flex-direction: column;
 `;
 
-const TextContent = styled.div`
+export const TextContent = styled.div`
     display: flex;
     align-items: center;
     flex-direction: column;
@@ -25,7 +25,7 @@ const TextContent = styled.div`
     p {
         font-size: 2.5rem;
         padding: 20px;
-        width: 60%;
+        width: 100%;
         text-align: center;
     }
 `;

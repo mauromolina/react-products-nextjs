@@ -43,7 +43,7 @@ const Header = () => {
                         align-items:center;
                     `}>
                     <Link href="/">
-                        <Logo>P</Logo>
+                        <Logo>M</Logo>
                     </Link>
                     <Searcher/>
                     <Nav/>
